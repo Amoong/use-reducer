@@ -1,31 +1,56 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 
-const INCREMENT = "increment";
-const DECREMENT = "decrement";
+const ADD = "add";
 
-type Action = { type: typeof INCREMENT } | { type: typeof DECREMENT };
+type Action = { type: typeof ADD; payload: ToDo };
+
+interface ToDo {
+  text: string;
+}
 interface IStateProps {
-  count: number;
+  toDos: Array<ToDo>;
 }
 
-const reducer = (state: IStateProps, action: Action): IStateProps => {
+const initialState = {
+  toDos: [],
+};
+
+const reducer = (
+  state: IStateProps = initialState,
+  action: Action,
+): IStateProps => {
   switch (action.type) {
-    case INCREMENT:
-      return { count: state.count + 1 };
-    case DECREMENT:
-      return { count: state.count - 1 };
+    case ADD:
+      return { toDos: [...state.toDos, { text: action.payload.text }] };
     default:
       throw new Error();
   }
 };
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, { count: 0 });
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [newToDo, setNewToDo] = useState<string>("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch({ type: ADD, payload: { text: newToDo } });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewToDo(e.target.value);
+  };
+
   return (
     <div className="App">
-      <h1>{state.count}</h1>
-      <button onClick={() => dispatch({ type: INCREMENT })}>Add</button>
-      <button onClick={() => dispatch({ type: DECREMENT })}>Sub</button>
+      <h1>To Dos</h1>
+      <form onSubmit={handleSubmit}>
+        <input onChange={handleChange} type="text" />
+      </form>
+      <ul>
+        {state.toDos.map((item: ToDo, index: number) => (
+          <li key={index}>{item.text}</li>
+        ))}
+      </ul>
     </div>
   );
 }
