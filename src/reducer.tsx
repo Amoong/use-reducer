@@ -1,11 +1,13 @@
 export const DEL = "del";
 export const ADD = "add";
 export const COMPLETE = "complete";
+export const UNCOMPLETE = "uncomplete";
 
 type Action =
   | { type: typeof ADD; payload: ToDo }
   | { type: typeof DEL; payload: string }
-  | { type: typeof COMPLETE; payload: string };
+  | { type: typeof COMPLETE; payload: string }
+  | { type: typeof UNCOMPLETE; payload: string };
 
 export interface ToDo {
   text: string;
@@ -49,6 +51,20 @@ const reducer = (
         ...state,
         toDos: state.toDos.filter(toDo => toDo.id !== action.payload),
         completed: [...state.completed, target],
+      };
+    case UNCOMPLETE:
+      const aTarget = state.completed.find(toDo => toDo.id === action.payload);
+
+      if (!aTarget) {
+        return {
+          ...state,
+        };
+      }
+
+      return {
+        ...state,
+        completed: state.completed.filter(toDo => toDo.id !== action.payload),
+        toDos: [...state.toDos, aTarget],
       };
     default:
       throw new Error();

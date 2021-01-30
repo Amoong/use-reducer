@@ -1,5 +1,12 @@
 import React, { useReducer, useState } from "react";
-import reducer, { initialState, ADD, DEL, COMPLETE, ToDo } from "./reducer";
+import reducer, {
+  initialState,
+  ADD,
+  DEL,
+  COMPLETE,
+  UNCOMPLETE,
+  ToDo,
+} from "./reducer";
 import { v4 } from "uuid";
 
 function App() {
@@ -46,7 +53,7 @@ function App() {
                 ❌
               </button>
               <button
-                onClick={() => dispatch({ type: COMPLETE, payload: item.id })}
+                onClick={() => dispatch({ type: UNCOMPLETE, payload: item.id })}
               >
                 💔
               </button>
