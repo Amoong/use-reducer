@@ -1,5 +1,5 @@
 import React, { useReducer, useState } from "react";
-import reducer, { initialState, ADD, DEL, ToDo } from "./reducer";
+import reducer, { initialState, ADD, DEL, COMPLETE, ToDo } from "./reducer";
 import { v4 } from "uuid";
 
 function App() {
@@ -28,26 +28,32 @@ function App() {
             <button onClick={() => dispatch({ type: DEL, payload: item.id })}>
               ❌
             </button>
-            <button onClick={() => dispatch({ type: DEL, payload: item.id })}>
+            <button
+              onClick={() => dispatch({ type: COMPLETE, payload: item.id })}
+            >
               ✅
             </button>
           </li>
         ))}
       </ul>
-      <ul>
-        {state.completed.length !== 0 && <h2>Completed</h2>}
-        {state.completed.map((item: ToDo) => (
-          <li key={item.id}>
-            <span>{item.text}</span>
-            <button onClick={() => dispatch({ type: DEL, payload: item.id })}>
-              ❌
-            </button>
-            <button onClick={() => dispatch({ type: DEL, payload: item.id })}>
-              💔
-            </button>
-          </li>
-        ))}
-      </ul>
+      {state.completed.length !== 0 && (
+        <ul>
+          <h2>Completed</h2>
+          {state.completed.map((item: ToDo) => (
+            <li key={item.id}>
+              <span>{item.text}</span>
+              <button onClick={() => dispatch({ type: DEL, payload: item.id })}>
+                ❌
+              </button>
+              <button
+                onClick={() => dispatch({ type: COMPLETE, payload: item.id })}
+              >
+                💔
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
