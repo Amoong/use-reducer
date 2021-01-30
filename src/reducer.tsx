@@ -1,22 +1,19 @@
-export const DEL = "del";
-export const ADD = "add";
-export const COMPLETE = "complete";
-export const UNCOMPLETE = "uncomplete";
+import { ADD, COMPLETE, DEL, UNCOMPLETE } from "./Actions";
 
-type Action =
-  | { type: typeof ADD; payload: ToDo }
-  | { type: typeof DEL; payload: string }
-  | { type: typeof COMPLETE; payload: string }
-  | { type: typeof UNCOMPLETE; payload: string };
-
-export interface ToDo {
+export interface IToDo {
   text: string;
   id: string;
 }
 
-interface IStateProps {
-  toDos: Array<ToDo>;
-  completed: Array<ToDo>;
+export type Action =
+  | { type: typeof ADD; payload: IToDo }
+  | { type: typeof DEL; payload: string }
+  | { type: typeof COMPLETE; payload: string }
+  | { type: typeof UNCOMPLETE; payload: string };
+
+export interface IStateProps {
+  toDos: Array<IToDo>;
+  completed: Array<IToDo>;
 }
 
 export const initialState = {
@@ -28,7 +25,6 @@ const reducer = (
   state: IStateProps = initialState,
   action: Action,
 ): IStateProps => {
-  console.log(state);
   switch (action.type) {
     case ADD:
       const { text, id } = action.payload;
@@ -37,6 +33,7 @@ const reducer = (
       return {
         ...state,
         toDos: state.toDos.filter(toDo => toDo.id !== action.payload),
+        completed: state.completed.filter(toDo => toDo.id !== action.payload),
       };
     case COMPLETE:
       const target = state.toDos.find(toDo => toDo.id === action.payload);
